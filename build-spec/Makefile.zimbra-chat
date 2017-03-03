@@ -1,0 +1,22 @@
+########################################################################################################
+
+ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
+
+build-zimbra-chat: downloads/openchat.jar downloads/zal-dev.jar downloads/com_zextras_chat_open.zip
+	install -D -t build/dist/zimbra-chat/opt/zimbra/lib/ext/openchat/ downloads/openchat.jar             
+	install -D -t build/dist/zimbra-chat/opt/zimbra/lib/ext/openchat/ downloads/zal-dev.jar              
+	install -D -t build/dist/zimbra-chat/opt/zimbra/zimlets/          downloads/com_zextras_chat_open.zip
+
+downloads/openchat.jar:
+	mkdir -p downloads
+	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/openchat.jar
+
+downloads/com_zextras_chat_open.zip:
+	mkdir -p downloads
+	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_chat_open.zip
+
+downloads/zal-dev.jar:
+	mkdir -p downloads
+	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zal-dev.jar
+
+########################################################################################################
