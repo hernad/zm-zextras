@@ -1,0 +1,57 @@
+########################################################################################################
+
+.PHONY: all clean clean-all build package
+
+ALL_PACKAGES = $(notdir $(wildcard pkg-spec/*))
+
+all: package
+
+build: $(patsubst %,build/dist/.%.bld,$(ALL_PACKAGES))
+
+package: $(patsubst %,build/dist/.%.pkg,$(ALL_PACKAGES))
+
+clean:
+	rm -rf build
+
+clean-all: clean
+	rm -rf downloads
+
+build/dist/.%.bld:
+	mkdir -p build/dist/
+	$(MAKE) build-$(patsubst build/dist/.%.bld,%,$@)
+	@touch $@
+
+build/dist/.%.pkg: build/dist/.%.bld pkg-spec/%/debian/* build-spec/Makefile.%
+	@if test -z "$(ENV_PKG_VERSION)"; \
+	then \
+	   echo 1>&2; \
+	   echo Error: ----------------------------------------------------------------------------------------- 1>&2; \
+	   echo Error: ENV_PKG_VERSION is not set. Example: make 'ENV_PKG_VERSION=8.7.2.GA.1125.UBUNTU16.64' ... 1>&2; \
+	   echo Error: ----------------------------------------------------------------------------------------- 1>&2; \
+	   echo 1>&2; \
+	   exit 1; \
+	fi
+	mkdir -p build/dist/$*/
+	cp -a pkg-spec/$*/debian build/dist/$*/
+	find build/dist/$*/debian -type f \
+	   | xargs sed -i \
+	               -e 's/@@ENV_PKG_VERSION@@/$(ENV_PKG_VERSION)/g' \
+	               -e 's/@@_PKG_NAME_@@/$*/g' \
+		       ; \
+	cd build/dist/$* && dpkg-buildpackage
+	@touch $@
+
+build-spec/Makefile.%:
+	@echo 1>&2; \
+	echo "Error: -----------------------------------------------------------------------------------------" 1>&2; \
+	echo "Error: Missing build-spec/Makefile.$*                                                           " 1>&2; \
+	echo "Error: This file should have the following target:                                              " 1>&2; \
+	echo "Error: build-$*:                                                                                " 1>&2; \
+	echo "Error:         @echo This target should place appropriate files in build/dist/$*                " 1>&2; \
+	echo "Error: -----------------------------------------------------------------------------------------" 1>&2; \
+	echo 1>&2; \
+	exit 1;
+
+include $(patsubst %,build-spec/Makefile.%,$(ALL_PACKAGES))
+
+########################################################################################################
