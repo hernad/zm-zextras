@@ -2,10 +2,10 @@
 
 ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
 
-build-zimbra-chat: downloads/openchat.jar downloads/zal-dev.jar downloads/com_zextras_chat_open.zip
-	install -D -t build/dist/zimbra-chat/opt/zimbra/lib/ext/openchat/ downloads/openchat.jar             
-	install -D -t build/dist/zimbra-chat/opt/zimbra/lib/ext/openchat/ downloads/zal-dev.jar              
-	install -D -t build/dist/zimbra-chat/opt/zimbra/zimlets/          downloads/com_zextras_chat_open.zip
+stage-zimbra-chat: downloads/openchat.jar downloads/zal-dev.jar downloads/com_zextras_chat_open.zip
+	install -T -D  downloads/openchat.jar               $(STAGE_DIR)/opt/zimbra/lib/ext/openchat/openchat.jar
+	install -T -D  downloads/zal-dev.jar                $(STAGE_DIR)/opt/zimbra/lib/ext/openchat/zal-dev.jar
+	install -T -D  downloads/com_zextras_chat_open.zip  $(STAGE_DIR)/opt/zimbra/zimlets/com_zextras_chat_open.zip
 
 downloads/openchat.jar:
 	mkdir -p downloads

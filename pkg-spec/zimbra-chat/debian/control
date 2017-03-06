@@ -11,5 +11,5 @@ Section: mail
 Priority: optional
 Version: @@ENV_PKG_VERSION@@
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, zimbra-core
 Description: zimbra chat extensions
