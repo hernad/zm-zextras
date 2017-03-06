@@ -6,9 +6,15 @@ ALL_PACKAGES = $(notdir $(wildcard pkg-spec/*))
 
 all: package
 
-build: $(patsubst %,build/dist/.%.bld,$(ALL_PACKAGES))
+build: $(patsubst %,build/.%.stg,$(ALL_PACKAGES))
 
-package: $(patsubst %,build/dist/.%.pkg,$(ALL_PACKAGES))
+ifeq ($(wildcard /etc/redhat-release),/etc/redhat-release)
+package: $(patsubst %,build/.%.rpm_pkg,$(ALL_PACKAGES))
+else ifeq ($(wildcard /etc/lsb-release),/etc/lsb-release)
+package: $(patsubst %,build/.%.deb_pkg,$(ALL_PACKAGES))
+else
+$(error "Unsupported system")
+endif
 
 clean:
 	rm -rf build
@@ -16,41 +22,73 @@ clean:
 clean-all: clean
 	rm -rf downloads
 
-build/dist/.%.bld:
-	mkdir -p build/dist/
-	$(MAKE) build-$(patsubst build/dist/.%.bld,%,$@)
+build/.%.stg:
+	@mkdir -p build/stage/$*
+	$(MAKE) PKG_NAME=$* STAGE_DIR=build/stage/$* stage-$*
 	@touch $@
 
-build/dist/.%.pkg: build/dist/.%.bld pkg-spec/%/debian/* build-spec/Makefile.%
-	@if test -z "$(ENV_PKG_VERSION)"; \
-	then \
-	   echo 1>&2; \
-	   echo Error: ----------------------------------------------------------------------------------------- 1>&2; \
-	   echo Error: ENV_PKG_VERSION is not set. Example: make 'ENV_PKG_VERSION=8.7.2.GA.1125.UBUNTU16.64' ... 1>&2; \
-	   echo Error: ----------------------------------------------------------------------------------------- 1>&2; \
-	   echo 1>&2; \
-	   exit 1; \
-	fi
-	mkdir -p build/dist/$*/
-	cp -a pkg-spec/$*/debian build/dist/$*/
-	find build/dist/$*/debian -type f \
-	   | xargs sed -i \
-	               -e 's/@@ENV_PKG_VERSION@@/$(ENV_PKG_VERSION)/g' \
-	               -e 's/@@_PKG_NAME_@@/$*/g' \
-		       ; \
-	cd build/dist/$* && dpkg-buildpackage
+build/.%.deb_pkg: build/.%.stg pkg-spec/%/debian/* build-spec/Makefile.%
+	@rm -rf "build/tmp/$*"
+	@mkdir -p "build/tmp/$*/debian/"
+	@cp -a -t "build/tmp/$*/debian/" "pkg-spec/$*/debian"/*
+	@$(MAKE) PKG_NAME=$* replace-pkg-vars
+	@mkdir -p build/dist
+	@cp -a -t "build/tmp/$*/" "build/stage/$*"/*
+	@cd build/tmp/$* && dpkg-buildpackage
+	@echo
+	@mv -v build/tmp/$*_*.* build/dist/;
+	@touch $@
+
+build/.%.rpm_pkg: build/.%.stg pkg-spec/%/rpm/* build-spec/Makefile.%
+	@rm -rf "build/tmp/$*"
+	@mkdir -p "build/tmp/$*/SPECS/"
+	@cp -a -t "build/tmp/$*/SPECS/" "pkg-spec/$*/rpm"/*.spec
+	@$(MAKE) PKG_NAME=$* replace-pkg-vars
+	@mkdir -p build/dist
+	@for spec_file in "build/tmp/$*/SPECS"/*.spec; \
+	do \
+	    mkdir -p "build/tmp/$*/BUILDROOT/"; \
+	    cp -a -t "build/tmp/$*/BUILDROOT/" "build/stage/$*"/*; \
+	    rpmbuild -v --define "_topdir $$PWD/build/tmp/$*" "--buildroot=$$PWD/build/tmp/$*/BUILDROOT/" -ba "$$spec_file"; \
+	    echo; \
+	    mv -v build/tmp/$*/SRPMS/*.rpm build/tmp/$*/RPMS/*/*.rpm build/dist/; \
+	done
 	@touch $@
 
 build-spec/Makefile.%:
-	@echo 1>&2; \
-	echo "Error: -----------------------------------------------------------------------------------------" 1>&2; \
-	echo "Error: Missing build-spec/Makefile.$*                                                           " 1>&2; \
-	echo "Error: This file should have the following target:                                              " 1>&2; \
-	echo "Error: build-$*:                                                                                " 1>&2; \
-	echo "Error:         @echo This target should place appropriate files in build/dist/$*                " 1>&2; \
-	echo "Error: -----------------------------------------------------------------------------------------" 1>&2; \
-	echo 1>&2; \
-	exit 1;
+	@echo 1>&2
+	@echo "Error: ---------------------------------------------------------------------------------------------" 1>&2
+	@echo "Error: Missing build-spec/Makefile.$*                                                               " 1>&2
+	@echo "Error: This file should have the following target:                                                  " 1>&2
+	@echo "Error: build-$*:                                                                                    " 1>&2
+	@echo "Error:         @echo This target should place appropriate files in build/dist/$*                    " 1>&2
+	@echo "Error: ---------------------------------------------------------------------------------------------" 1>&2
+	@echo 1>&2
+	@exit 1;
+
+check-env-var:
+	@if test -z "$${$(ENV_VAR_NAME)}"; \
+	then \
+	   echo 1>&2; \
+	   echo "Error: ---------------------------------------------------------------------------------------------" 1>&2; \
+	   echo "Error: $(ENV_VAR_NAME) is not set.                                                                  " 1>&2; \
+	   echo "Error: Example:                                                                                     " 1>&2; \
+	   echo "Error:    make 'ENV_PKG_VERSION=8.7.2.GA.1125.UBUNTU16.64' ENV_PKG_RELEASE=20170303051231 clean all " 1>&2; \
+	   echo "Error:    make 'ENV_PKG_VERSION=8.7.2_GA_1125.RHEL7.64'    ENV_PKG_RELEASE=20170303051231 clean all " 1>&2; \
+	   echo "Error: ---------------------------------------------------------------------------------------------" 1>&2; \
+	   echo 1>&2; \
+	   exit 1; \
+	fi
+
+replace-pkg-vars:
+	@$(MAKE) "ENV_VAR_NAME=ENV_PKG_VERSION" check-env-var
+	@$(MAKE) "ENV_VAR_NAME=ENV_PKG_RELEASE" check-env-var
+	@find build/tmp/$(PKG_NAME)/ -type f \
+	   | xargs sed -i \
+	               -e 's/@@ENV_PKG_RELEASE@@/$(ENV_PKG_RELEASE)/g' \
+	               -e 's/@@ENV_PKG_VERSION@@/$(ENV_PKG_VERSION)/g' \
+	               -e 's/@@_PKG_NAME_@@/$(PKG_NAME)/g';
+
 
 include $(patsubst %,build-spec/Makefile.%,$(ALL_PACKAGES))
 
