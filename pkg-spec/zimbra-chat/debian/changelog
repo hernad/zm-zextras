@@ -1,4 +1,4 @@
-@@_PKG_NAME_@@ (@@ENV_PKG_VERSION@@) stable; urgency=medium
+@@_PKG_NAME_@@ (@@ENV_PKG_VERSION@@-@@ENV_PKG_RELEASE@@) stable; urgency=medium
 
   * Release - @@ENV_PKG_VERSION@@
 

@@ -9,12 +9,20 @@ all: package
 build: $(patsubst %,build/.%.stg,$(ALL_PACKAGES))
 
 ifeq ($(wildcard /etc/redhat-release),/etc/redhat-release)
-package: $(patsubst %,build/.%.rpm_pkg,$(ALL_PACKAGES))
+
+   PKG_TARGETS = $(patsubst %,build/.%.rpm_pkg,$(ALL_PACKAGES))
+   PKG_OS_TAG = $(shell sed -n -e '1{s/[^0-9]*/r/; s/[.].*//; p;}' /etc/redhat-release)
+
 else ifeq ($(wildcard /etc/lsb-release),/etc/lsb-release)
-package: $(patsubst %,build/.%.deb_pkg,$(ALL_PACKAGES))
+
+   PKG_TARGETS = $(patsubst %,build/.%.deb_pkg,$(ALL_PACKAGES))
+   PKG_OS_TAG = $(shell sed -n -e '/DISTRIB_RELEASE/{s/.*=/u/; s/[.].*//; p;}' /etc/lsb-release)
+
 else
-$(error "Unsupported system")
+   $(error "Unsupported system")
 endif
+
+package: $(PKG_TARGETS)
 
 clean:
 	rm -rf build
@@ -70,12 +78,15 @@ check-env-var:
 	@if test -z "$${$(ENV_VAR_NAME)}"; \
 	then \
 	   echo 1>&2; \
-	   echo "Error: ---------------------------------------------------------------------------------------------" 1>&2; \
-	   echo "Error: $(ENV_VAR_NAME) is not set.                                                                  " 1>&2; \
-	   echo "Error: Example:                                                                                     " 1>&2; \
-	   echo "Error:    make 'ENV_PKG_VERSION=8.7.2.GA.1125.UBUNTU16.64' ENV_PKG_RELEASE=20170303051231 clean all " 1>&2; \
-	   echo "Error:    make 'ENV_PKG_VERSION=8.7.2_GA_1125.RHEL7.64'    ENV_PKG_RELEASE=20170303051231 clean all " 1>&2; \
-	   echo "Error: ---------------------------------------------------------------------------------------------" 1>&2; \
+	   echo "Error: -----------------------------------------------------------------------------------------------" 1>&2; \
+	   echo "Error: $(ENV_VAR_NAME) is not set.                                                                    " 1>&2; \
+	   echo "Error:                                                                                                " 1>&2; \
+	   echo "Error: Example:                                                                                       " 1>&2; \
+	   echo "Error:    make 'ENV_PKG_VERSION=1.0.0' 'ENV_PKG_RELEASE=1zimbra8.8b1' clean all                       " 1>&2; \
+	   echo "Error:           generates: $(PKG_NAME)-1.0.0-1zimbra8.8b1.r7.x86_64.rpm on RHEL/CENTOS               " 1>&2; \
+	   echo "Error:    make 'ENV_PKG_VERSION=1.0.0' 'ENV_PKG_RELEASE=1zimbra8.8b1' clean all                       " 1>&2; \
+	   echo "Error:           generates: $(PKG_NAME)_1.0.0-1zimbra8.8b1.u16_amd64.deb on UBUNTU                    " 1>&2; \
+	   echo "Error: -----------------------------------------------------------------------------------------------" 1>&2; \
 	   echo 1>&2; \
 	   exit 1; \
 	fi
@@ -85,7 +96,7 @@ replace-pkg-vars:
 	@$(MAKE) "ENV_VAR_NAME=ENV_PKG_RELEASE" check-env-var
 	@find build/tmp/$(PKG_NAME)/ -type f \
 	   | xargs sed -i \
-	               -e 's/@@ENV_PKG_RELEASE@@/$(ENV_PKG_RELEASE)/g' \
+	               -e 's/@@ENV_PKG_RELEASE@@/$(ENV_PKG_RELEASE).$(PKG_OS_TAG)/g' \
 	               -e 's/@@ENV_PKG_VERSION@@/$(ENV_PKG_VERSION)/g' \
 	               -e 's/@@_PKG_NAME_@@/$(PKG_NAME)/g';
 
