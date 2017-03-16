@@ -12,4 +12,4 @@ Priority: optional
 Version: @@ENV_PKG_VERSION@@
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, zimbra-core
-Description: Zimbra Chat Extensions
+Description: Zimbra Drive Extensions

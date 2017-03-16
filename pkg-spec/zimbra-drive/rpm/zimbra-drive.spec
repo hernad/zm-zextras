@@ -1,7 +1,7 @@
 #
 # spec file for zimbra.rpm
 #
-Summary: Zimbra Chat Extensions
+Summary: Zimbra Drive Extensions
 Name: @@_PKG_NAME_@@
 Version: @@ENV_PKG_VERSION@@
 Release: @@ENV_PKG_RELEASE@@
@@ -14,7 +14,7 @@ AutoReqProv: no
 Requires: zimbra-core
 
 %description
-Zimbra Chat Extensions
+Zimbra Drive Extensions
 
 %define __spec_install_pre /bin/true
 
@@ -35,6 +35,6 @@ Zimbra Chat Extensions
 %postun
 
 %files
-/opt/zimbra/lib/ext/openchat
-/opt/zimbra/lib/ext/openchat/*
+/opt/zimbra/lib/ext/zimbradrive
+/opt/zimbra/lib/ext/zimbradrive/*
 /opt/zimbra/zimlets/*
