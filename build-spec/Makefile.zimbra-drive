@@ -2,21 +2,21 @@
 
 ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
 
-stage-zimbra-drive: downloads/zimbradrive-extension.jar downloads/com_zextras_drive_open.zip downloads/zal-dev1.jar
+stage-zimbra-drive: downloads/zimbradrive-extension.jar downloads/zal-dev-drive.jar downloads/com_zextras_drive_open.zip
 	install -T -D  downloads/zimbradrive-extension.jar  $(STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
-	install -T -D  downloads/zal-dev1.jar               $(STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zal-dev.jar
+	install -T -D  downloads/zal-dev-drive.jar          $(STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zal-dev.jar
 	install -T -D  downloads/com_zextras_drive_open.zip $(STAGE_DIR)/opt/zimbra/zimlets/com_zextras_drive_open.zip
 
 downloads/zimbradrive-extension.jar:
 	mkdir -p downloads
-	cd downloads && wget https://download.zextras.com/drive/zimbradrive-extension.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zimbradrive-extension.jar
 
 downloads/com_zextras_drive_open.zip:
 	mkdir -p downloads
-	cd downloads && wget https://download.zextras.com/drive/com_zextras_drive_open.zip
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_drive_open.zip
 
-downloads/zal-dev1.jar:
+downloads/zal-dev-drive.jar:
 	mkdir -p downloads
-	cd downloads && wget -o zal-dev1.jar https://download.zextras.com/zal-dev.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zal-dev.jar
 
 ########################################################################################################

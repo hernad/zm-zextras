@@ -2,21 +2,21 @@
 
 ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
 
-stage-zimbra-chat: downloads/openchat.jar downloads/zal-dev.jar downloads/com_zextras_chat_open.zip
+stage-zimbra-chat: downloads/openchat.jar downloads/zal-dev-chat.jar downloads/com_zextras_chat_open.zip
 	install -T -D  downloads/openchat.jar               $(STAGE_DIR)/opt/zimbra/lib/ext/openchat/openchat.jar
-	install -T -D  downloads/zal-dev.jar                $(STAGE_DIR)/opt/zimbra/lib/ext/openchat/zal-dev.jar
+	install -T -D  downloads/zal-dev-chat.jar           $(STAGE_DIR)/opt/zimbra/lib/ext/openchat/zal-dev.jar
 	install -T -D  downloads/com_zextras_chat_open.zip  $(STAGE_DIR)/opt/zimbra/zimlets/com_zextras_chat_open.zip
 
 downloads/openchat.jar:
 	mkdir -p downloads
-	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/openchat.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/openchat.jar
 
 downloads/com_zextras_chat_open.zip:
 	mkdir -p downloads
-	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_chat_open.zip
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_chat_open.zip
 
-downloads/zal-dev.jar:
+downloads/zal-dev-chat.jar:
 	mkdir -p downloads
-	cd downloads && wget http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zal-dev.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zal-dev.jar
 
 ########################################################################################################
