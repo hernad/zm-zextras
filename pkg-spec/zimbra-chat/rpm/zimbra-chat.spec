@@ -35,4 +35,6 @@ zimbra chat extensions
 %postun
 
 %files
-/opt
+/opt/zimbra/lib/ext/openchat
+/opt/zimbra/lib/ext/openchat/*
+/opt/zimbra/zimlets/*

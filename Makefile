@@ -3,3 +3,5 @@
 include build-spec/Makefile.common
 
 ########################################################################################################
+
+# sudo apt install dpkg-dev debhelper
