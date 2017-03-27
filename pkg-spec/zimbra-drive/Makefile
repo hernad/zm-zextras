@@ -2,10 +2,10 @@
 
 ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
 
-stage-zimbra-drive: downloads/zimbradrive-extension.jar downloads/zal-dev-drive.jar downloads/com_zextras_drive_open.zip
-	install -T -D  downloads/zimbradrive-extension.jar  $(STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
-	install -T -D  downloads/zal-dev-drive.jar          $(STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zal-dev.jar
-	install -T -D  downloads/com_zextras_drive_open.zip $(STAGE_DIR)/opt/zimbra/zimlets/com_zextras_drive_open.zip
+stage: downloads/zimbradrive-extension.jar downloads/zal-dev-drive.jar downloads/com_zextras_drive_open.zip
+	install -T -D  downloads/zimbradrive-extension.jar  $(PKG_STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
+	install -T -D  downloads/zal-dev-drive.jar          $(PKG_STAGE_DIR)/opt/zimbra/lib/ext/zimbradrive/zal-dev.jar
+	install -T -D  downloads/com_zextras_drive_open.zip $(PKG_STAGE_DIR)/opt/zimbra/zimlets/com_zextras_drive_open.zip
 
 downloads/zimbradrive-extension.jar:
 	mkdir -p downloads
