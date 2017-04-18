@@ -14,11 +14,11 @@ zimbra-drive-pkg:
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
-	   --pkg-version=1.0.4 \
+	   --pkg-version=1.0.5 \
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
-	   --pkg-depends-list='zimbra-core' \
+	   --pkg-depends-list='zimbra-store' \
 	   --pkg-install-list='/opt/zimbra/lib/ext/zimbradrive' \
 	   --pkg-install-list='/opt/zimbra/lib/ext/zimbradrive/*' \
 	   --pkg-install-list='/opt/zimbra/zimlets/*'
@@ -27,11 +27,11 @@ zimbra-chat-pkg:
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
-	   --pkg-version=1.0.4 \
+	   --pkg-version=1.0.5 \
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends-list='zimbra-core' \
+	   --pkg-depends-list='zimbra-store' \
 	   --pkg-install-list='/opt/zimbra/lib/ext/openchat' \
 	   --pkg-install-list='/opt/zimbra/lib/ext/openchat/*' \
 	   --pkg-install-list='/opt/zimbra/zimlets/*'
