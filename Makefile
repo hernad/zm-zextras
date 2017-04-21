@@ -1,16 +1,26 @@
 ########################################################################################################
 
-PKG_SPEC_DIR = pkg-spec
+SHELL = bash
 
-ifeq ($(PKG_RELEASE),)
-   $(error "PKG_RELEASE not defined; Example: make 'PKG_RELEASE=1zimbra8.7b1' ...")
-endif
+PKG_SPEC_DIR = pkg-spec
 
 .PHONY: clean all
 
 all: zimbra-drive-pkg zimbra-chat-pkg
 
-zimbra-drive-pkg:
+require-pkg-release:
+	@if [ -z "$(PKG_RELEASE)" ]; \
+	then \
+	   echo; \
+	   echo "ERROR: -------------------------------------------------"; \
+	   echo "ERROR: PKG_RELEASE not defined                          "; \
+	   echo "ERROR: Example: make 'PKG_RELEASE=1zimbra8.7b1' ...     "; \
+	   echo "ERROR: -------------------------------------------------"; \
+	   echo; \
+	   exit 1; \
+	fi
+
+zimbra-drive-pkg: require-pkg-release
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
@@ -23,7 +33,7 @@ zimbra-drive-pkg:
 	   --pkg-install-list='/opt/zimbra/lib/ext/zimbradrive/*' \
 	   --pkg-install-list='/opt/zimbra/zimlets/*'
 
-zimbra-chat-pkg:
+zimbra-chat-pkg: require-pkg-release
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
