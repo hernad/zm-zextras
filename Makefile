@@ -24,7 +24,7 @@ zimbra-drive-pkg: require-pkg-release
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
-	   --pkg-version=1.0.5 \
+	   --pkg-version=1.0.6 \
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
@@ -37,7 +37,7 @@ zimbra-chat-pkg: require-pkg-release
 	../zm-pkg-tool/pkg-build.pl \
 	   --cfg-dir=./$(PKG_SPEC_DIR) \
 	   --out-base-dir=build \
-	   --pkg-version=1.0.5 \
+	   --pkg-version=1.0.6 \
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
