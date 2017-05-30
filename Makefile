@@ -34,10 +34,10 @@ zimbra-drive-pkg: stage-drive require-pkg-release
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
-	   --pkg-depends-list='zimbra-store' \
-	   --pkg-install-list='/opt/zimbra/lib/ext/zimbradrive' \
-	   --pkg-install-list='/opt/zimbra/lib/ext/zimbradrive/*' \
-	   --pkg-install-list='/opt/zimbra/zimlets/*'
+	   --pkg-depends='zimbra-store' \
+	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive' \
+	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive/*' \
+	   --pkg-installs='/opt/zimbra/zimlets/*'
 
 ########################################################################################################
 
@@ -53,10 +53,10 @@ zimbra-chat-pkg: stage-chat require-pkg-release
 	   --pkg-release=$(PKG_RELEASE) \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends-list='zimbra-store' \
-	   --pkg-install-list='/opt/zimbra/lib/ext/openchat' \
-	   --pkg-install-list='/opt/zimbra/lib/ext/openchat/*' \
-	   --pkg-install-list='/opt/zimbra/zimlets/*'
+	   --pkg-depends='zimbra-store' \
+	   --pkg-installs='/opt/zimbra/lib/ext/openchat' \
+	   --pkg-installs='/opt/zimbra/lib/ext/openchat/*' \
+	   --pkg-installs='/opt/zimbra/zimlets/*'
 
 ########################################################################################################
 
