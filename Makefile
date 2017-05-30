@@ -22,10 +22,10 @@ require-pkg-release:
 
 ########################################################################################################
 
-stage-drive: downloads/zimbradrive-extension.jar downloads/zal.jar downloads/com_zextras_drive_open.zip
+stage-drive: downloads/zimbradrive-extension.jar downloads/zal_drive.jar downloads/com_zextras_drive_open.zip
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
 	install -T -D downloads/zimbradrive-extension.jar  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
-	install -T -D downloads/zal.jar                    build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
+	install -T -D downloads/zal_drive.jar              build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
 	install -T -D downloads/com_zextras_drive_open.zip build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
 
 zimbra-drive-pkg: stage-drive require-pkg-release
@@ -41,10 +41,10 @@ zimbra-drive-pkg: stage-drive require-pkg-release
 
 ########################################################################################################
 
-stage-chat: downloads/openchat.jar downloads/com_zextras_chat_open.zip downloads/zal.jar
+stage-chat: downloads/openchat.jar downloads/com_zextras_chat_open.zip downloads/zal_chat.jar
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
 	install -T -D downloads/openchat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/openchat.jar
-	install -T -D downloads/zal.jar                    build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
+	install -T -D downloads/zal_chat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
 	install -T -D downloads/com_zextras_chat_open.zip  build/stage/zimbra-chat/opt/zimbra/zimlets/com_zextras_chat_open.zip
 
 zimbra-chat-pkg: stage-chat require-pkg-release
@@ -64,23 +64,27 @@ ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
 
 downloads/openchat.jar:
 	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/openchat.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/openchat.jar
 
 downloads/com_zextras_chat_open.zip:
 	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_chat_open.zip
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/com_zextras_chat_open.zip
 
-downloads/zal.jar:
+downloads/zal_chat.jar:
 	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zal.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/zal.jar
 
 downloads/zimbradrive-extension.jar:
 	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/zimbradrive-extension.jar
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/zimbradrive-extension.jar
 
 downloads/com_zextras_drive_open.zip:
 	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/com_zextras_drive_open.zip
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/com_zextras_drive_open.zip
+
+downloads/zal_drive.jar:
+	mkdir -p downloads/
+	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/zal.jar
 
 ########################################################################################################
 
