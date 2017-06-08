@@ -2,4 +2,4 @@ This repository is used to create RPM and DEBIAN packages related to zextras (ex
 
 To build (example):
 	make clean
-	make 'PKG_RELEASE=1zimbra8.7b1'
+	make
