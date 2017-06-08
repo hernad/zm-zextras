@@ -8,30 +8,20 @@ SHELL = bash
 
 all: zimbra-drive-pkg zimbra-chat-pkg
 
-require-pkg-release:
-	@if [ -z "$(PKG_RELEASE)" ]; \
-	then \
-	   echo; \
-	   echo "ERROR: -------------------------------------------------"; \
-	   echo "ERROR: PKG_RELEASE not defined                          "; \
-	   echo "ERROR: Example: make 'PKG_RELEASE=1zimbra8.7b1' ...     "; \
-	   echo "ERROR: -------------------------------------------------"; \
-	   echo; \
-	   exit 1; \
-	fi
-
 ########################################################################################################
 
-stage-drive: downloads/zimbradrive-extension.jar downloads/zal_drive.jar downloads/com_zextras_drive_open.zip
-	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
-	install -T -D downloads/zimbradrive-extension.jar  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
-	install -T -D downloads/zal_drive.jar              build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
-	install -T -D downloads/com_zextras_drive_open.zip build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
+DRIVE_VERSION = 1.0.7
 
-zimbra-drive-pkg: stage-drive require-pkg-release
+stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip
+	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
+	install -T -D downloads/drive/zimbradrive-extension.jar  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
+	install -T -D downloads/drive/zal.jar                    build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
+	install -T -D downloads/drive/com_zextras_drive_open.zip build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
+
+zimbra-drive-pkg: stage-drive
 	../zm-pkg-tool/pkg-build.pl \
-	   --pkg-version=1.0.7+$(shell git log --format=%at -1 hash-track/drive.hash) \
-	   --pkg-release=$(PKG_RELEASE) \
+	   --pkg-version=$(DRIVE_VERSION)+$(shell git log --format=%at -1 hash-track/drive.hash) \
+	   --pkg-release=1 \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
 	   --pkg-depends='zimbra-store' \
@@ -39,18 +29,32 @@ zimbra-drive-pkg: stage-drive require-pkg-release
 	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
 
+downloads/drive/zimbradrive-extension.jar:
+	mkdir -p downloads/drive
+	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zimbradrive-extension.jar
+
+downloads/drive/com_zextras_drive_open.zip:
+	mkdir -p downloads/drive
+	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/com_zextras_drive_open.zip
+
+downloads/drive/zal.jar:
+	mkdir -p downloads/drive
+	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zal.jar
+
 ########################################################################################################
 
-stage-chat: downloads/openchat.jar downloads/com_zextras_chat_open.zip downloads/zal_chat.jar
-	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
-	install -T -D downloads/openchat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/openchat.jar
-	install -T -D downloads/zal_chat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
-	install -T -D downloads/com_zextras_chat_open.zip  build/stage/zimbra-chat/opt/zimbra/zimlets/com_zextras_chat_open.zip
+CHAT_VERSION = 1.0.7
 
-zimbra-chat-pkg: stage-chat require-pkg-release
+stage-chat: downloads/chat/openchat.jar downloads/chat/com_zextras_chat_open.zip downloads/chat/zal.jar
+	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
+	install -T -D downloads/chat/openchat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/openchat.jar
+	install -T -D downloads/chat/zal.jar                    build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
+	install -T -D downloads/chat/com_zextras_chat_open.zip  build/stage/zimbra-chat/opt/zimbra/zimlets/com_zextras_chat_open.zip
+
+zimbra-chat-pkg: stage-chat
 	../zm-pkg-tool/pkg-build.pl \
-	   --pkg-version=1.0.7+$(shell git log --format=%at -1 hash-track/chat.hash) \
-	   --pkg-release=$(PKG_RELEASE) \
+	   --pkg-version=$(CHAT_VERSION)+$(shell git log --format=%at -1 hash-track/chat.hash) \
+	   --pkg-release=1 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
 	   --pkg-depends='zimbra-store' \
@@ -58,33 +62,17 @@ zimbra-chat-pkg: stage-chat require-pkg-release
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
 
-########################################################################################################
+downloads/chat/openchat.jar:
+	mkdir -p downloads/chat
+	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/openchat.jar
 
-ZIMBRA_THIRDPARTY_SERVER = zdev-vm008.eng.zimbra.com
+downloads/chat/com_zextras_chat_open.zip:
+	mkdir -p downloads/chat
+	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/com_zextras_chat_open.zip
 
-downloads/openchat.jar:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/openchat.jar
-
-downloads/com_zextras_chat_open.zip:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/com_zextras_chat_open.zip
-
-downloads/zal_chat.jar:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/chat/current/zal.jar
-
-downloads/zimbradrive-extension.jar:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/zimbradrive-extension.jar
-
-downloads/com_zextras_drive_open.zip:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/com_zextras_drive_open.zip
-
-downloads/zal_drive.jar:
-	mkdir -p downloads/
-	wget -O $@ http://$(ZIMBRA_THIRDPARTY_SERVER)/ZimbraThirdParty/zextras/drive/current/zal.jar
+downloads/chat/zal.jar:
+	mkdir -p downloads/chat
+	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/zal.jar
 
 ########################################################################################################
 
