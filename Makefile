@@ -20,8 +20,9 @@ stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zal.jar d
 
 zimbra-drive-pkg: stage-drive
 	../zm-pkg-tool/pkg-build.pl \
+           --out-type=binary \
 	   --pkg-version=$(DRIVE_VERSION)+$(shell git log --format=%at -1 hash-track/drive.hash) \
-	   --pkg-release=1 \
+	   --pkg-release=2 \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
 	   --pkg-depends='zimbra-store' \
@@ -53,8 +54,9 @@ stage-chat: downloads/chat/openchat.jar downloads/chat/com_zextras_chat_open.zip
 
 zimbra-chat-pkg: stage-chat
 	../zm-pkg-tool/pkg-build.pl \
+           --out-type=binary \
 	   --pkg-version=$(CHAT_VERSION)+$(shell git log --format=%at -1 hash-track/chat.hash) \
-	   --pkg-release=1 \
+	   --pkg-release=2 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
 	   --pkg-depends='zimbra-store' \
