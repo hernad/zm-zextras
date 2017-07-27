@@ -10,7 +10,7 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.7
+DRIVE_VERSION = 1.0.8
 
 stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
@@ -22,7 +22,7 @@ zimbra-drive-pkg: stage-drive
 	../zm-pkg-tool/pkg-build.pl \
            --out-type=binary \
 	   --pkg-version=$(DRIVE_VERSION)+$(shell git log --format=%at -1 hash-track/drive.hash) \
-	   --pkg-release=2 \
+	   --pkg-release=1 \
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
 	   --pkg-depends='zimbra-store' \
