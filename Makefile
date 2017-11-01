@@ -9,6 +9,14 @@ SHA512 = sha512sum
 ########################################################################################################
 
 all: zimbra-drive-pkg zimbra-chat-pkg
+	rm -rf build/stage build/tmp
+	cd build/dist/[ucr]* && \
+	if [ -f "/etc/redhat-release" ]; \
+	then \
+	   createrepo '.'; \
+	else \
+	   dpkg-scanpackages '.' /dev/null > Packages; \
+	fi
 
 ########################################################################################################
 
