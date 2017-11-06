@@ -34,9 +34,6 @@ references:
       steps:
          - attach_workspace:
             at: ..
-         - run:
-            name: Creating build
-            command: find
          - deploy:
             name: Deploying to S3
             command: |
