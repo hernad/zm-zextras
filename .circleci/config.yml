@@ -8,7 +8,9 @@ references:
          - checkout
          - run: 
             name: Checking out dependencies
-            command: git clone https://github.com/Zimbra/zm-pkg-tool.git ~/zm-pkg-tool
+            command: |
+               git clone https://github.com/Zimbra/zm-pkg-tool.git ~/zm-pkg-tool
+               echo "BUILD_NO=$CIRCLE_BUILD_NUM" > config.build
          - persist_to_workspace:
             root: ..
             paths:
@@ -38,12 +40,11 @@ references:
          - deploy:
             name: Deploying to S3
             command: |
-               aws s3 sync build/dist/ "s3://files.zimbra.com/dev-releases/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM/archives/zimbra-zextras/" \
-                  --delete \
-                  --acl public-read \
-                  --region us-east-1
-               aws s3 sync build/dist/ "s3://files.zimbra.com/dev-releases/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BRANCH/archives/zimbra-zextras/" \
-                  --delete \
+               # NOTE: We are not using $CIRCLE_BUILD_NUM as its different for each job of the workflow
+               #       Instead, we need $CIRCLE_BUILD_NUM allocated for 'checkout' job, (stored in config.build)
+               BUILD_NO=$(cat config.build | sed -ne '/^BUILD_NO\>/ { s/.*=\s*//p }'); [ ! -z "$BUILD_NO" ] || exit 2;
+
+               aws s3 sync build/dist/ "s3://files.zimbra.com/dev-releases/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BRANCH-$BUILD_NO/archives/zimbra-zextras/" \
                   --acl public-read \
                   --region us-east-1
 
