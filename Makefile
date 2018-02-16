@@ -20,11 +20,12 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.10
+DRIVE_VERSION = 1.0.11
 
-stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip
+stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zimbradrive-extension.conf.example downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip 
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
 	install -T -D downloads/drive/zimbradrive-extension.jar  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
+	install -T -D downloads/drive/zimbradrive-extension.conf.example  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.conf.example
 	install -T -D downloads/drive/zal.jar                    build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
 	install -T -D downloads/drive/com_zextras_drive_open.zip build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
 
@@ -43,6 +44,10 @@ zimbra-drive-pkg: stage-drive
 downloads/drive/zimbradrive-extension.jar:
 	mkdir -p downloads/drive
 	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zimbradrive-extension.jar
+
+downloads/drive/zimbradrive-extension.conf.example:
+	mkdir -p downloads/drive
+	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zimbradrive-extension.conf.example
 
 downloads/drive/com_zextras_drive_open.zip:
 	mkdir -p downloads/drive
