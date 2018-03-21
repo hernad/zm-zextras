@@ -20,7 +20,7 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.11
+DRIVE_VERSION = 1.0.12
 
 stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zimbradrive-extension.conf.example downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip 
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
@@ -58,7 +58,7 @@ downloads/drive/zal.jar:
 
 ########################################################################################################
 
-CHAT_VERSION = 1.0.12
+CHAT_VERSION = 1.0.13
 
 stage-chat: downloads/chat/openchat.jar downloads/chat/com_zextras_chat_open.zip downloads/chat/zal.jar
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
