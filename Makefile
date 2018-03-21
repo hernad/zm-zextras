@@ -20,7 +20,7 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.12
+DRIVE_VERSION = 1.0.11
 
 stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zimbradrive-extension.conf.example downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip 
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
@@ -73,7 +73,7 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-release=2 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends='zimbra-store' \
+	   --pkg-depends='zimbra-store (>= 8.8.8)' \
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat' \
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
