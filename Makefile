@@ -74,6 +74,7 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
 	   --pkg-depends='zimbra-store (>= 8.8.8)' \
+           --pkg-obsoletes='zimbra-talk' \
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat' \
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
