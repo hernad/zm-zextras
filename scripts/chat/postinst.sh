@@ -8,9 +8,9 @@ if [ $? -ne 0 ]; then
    echo "zmzimletctl undeploy com_zextras_talk"
    echo "Install the Zimbra Open Chat zimlet."
    echo "zmzimletctl deploy /opt/zimbra/zimlets/com_zextras_drive_open.zip"
-elif
+else
    su - zimbra -c  "zmzimletctl  -l listZimlets" | grep -e "com_zextras_talk"
-   if [ "$?" -gt "0" ]; then
+   if [ "$?" -eq "0" ]; then
       echo "removing the talk zimlet.."
       su - zimbra -c  "zmzimletctl undeploy com_zextras_talk"
    fi
