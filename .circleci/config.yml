@@ -1,0 +1,143 @@
+version: 2
+
+############################################################################
+
+references:
+   checkout_job_steps: &checkout_job_steps
+      steps:
+         - checkout
+         - run: 
+            name: Checking out dependencies
+            command: |
+               git clone https://github.com/Zimbra/zm-pkg-tool.git ~/zm-pkg-tool
+               echo "BUILD_NO=$CIRCLE_BUILD_NUM" > config.build
+         - persist_to_workspace:
+            root: ..
+            paths:
+               - zm-zextras
+               - zm-pkg-tool
+
+   build_job_steps: &build_job_steps
+      steps:
+         - attach_workspace:
+            at: ..
+         - run:
+            name: Creating build
+            command: make
+         - store_artifacts:
+            path: build/dist
+         - persist_to_workspace:
+            root: ..
+            paths: zm-zextras/build/dist/*
+
+   deploy_s3_job_steps: &deploy_s3_job_steps
+      steps:
+         - attach_workspace:
+            at: ..
+         - deploy:
+            name: Deploying to S3
+            command: |
+               # NOTE: We are not using $CIRCLE_BUILD_NUM as its different for each job of the workflow
+               #       Instead, we need $CIRCLE_BUILD_NUM allocated for 'checkout' job, (stored in config.build)
+               BUILD_NO=$(cat config.build | sed -ne '/^BUILD_NO\>/ { s/.*=\s*//p }'); [ ! -z "$BUILD_NO" ] || exit 2;
+
+               aws s3 sync build/dist/ "s3://files.zimbra.com/dev-releases/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BRANCH-$BUILD_NO/archives/zimbra-zextras/" \
+                  --acl public-read \
+                  --region us-east-1
+
+   std_filters: &std_filters
+      filters:
+         branches:
+            only:
+               - master
+               - develop
+
+############################################################################
+
+jobs:
+   checkout:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:core-ubuntu
+      <<: *checkout_job_steps
+
+   build_u16:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:devcore-ubuntu-16.04
+      <<: *build_job_steps
+
+   build_u14:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:devcore-ubuntu-14.04
+      <<: *build_job_steps
+
+   build_u12:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:devcore-ubuntu-12.04
+      <<: *build_job_steps
+
+   build_c7:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:devcore-centos-7
+      <<: *build_job_steps
+
+   build_c6:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:devcore-centos-6
+      <<: *build_job_steps
+
+   deploy_s3:
+      working_directory: ~/zm-zextras
+      shell: /bin/bash -eo pipefail
+      docker:
+         - image: zimbra/zm-base-os:core-ubuntu
+      <<: *deploy_s3_job_steps
+
+############################################################################
+
+workflows:
+   version: 2
+   main:
+      jobs:
+         - checkout
+         - build_u16:
+            requires:
+               - checkout
+         - build_u14:
+            requires:
+               - checkout
+         - build_u12:
+            requires:
+               - checkout
+         - build_c7:
+            requires:
+               - checkout
+         - build_c6:
+            requires:
+               - checkout
+
+         - deploy_s3_hold:
+            type: approval
+            requires:
+               - build_u16
+               - build_u14
+               - build_u12
+               - build_c7
+               - build_c6
+            <<: *std_filters
+
+         - deploy_s3:
+            requires:
+               - deploy_s3_hold
+            <<: *std_filters
