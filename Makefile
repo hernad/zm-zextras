@@ -58,7 +58,7 @@ downloads/drive/zal.jar:
 
 ########################################################################################################
 
-CHAT_VERSION = 1.0.14
+CHAT_VERSION = 1.0.15
 
 stage-chat: downloads/chat/openchat.jar downloads/chat/com_zextras_chat_open.zip downloads/chat/zal.jar
 	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
