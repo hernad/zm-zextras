@@ -60,11 +60,11 @@ downloads/drive/zal.jar:
 
 CHAT_VERSION = 1.0.17
 
-stage-chat: downloads/chat/openchat.jar downloads/chat/com_zextras_chat_open.zip downloads/chat/zal.jar
-	$(MAKE) TRACK_IN="$^" TRACK_OUT=chat gen-hash-track
-	install -T -D downloads/chat/openchat.jar               build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/openchat.jar
-	install -T -D downloads/chat/zal.jar                    build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
-	install -T -D downloads/chat/com_zextras_chat_open.zip  build/stage/zimbra-chat/opt/zimbra/zimlets/com_zextras_chat_open.zip
+stage-chat: downloads/chat
+	$(MAKE) TRACK_IN="downloads/chat/extension/zal.jar downloads/chat/extension/openchat.jar downloads/chat/zimlet/com_zextras_chat_open.zip" TRACK_OUT=chat gen-hash-track
+	install -T -D downloads/chat/extension/openchat.jar     build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/openchat.jar
+	install -T -D downloads/chat/extension/zal.jar                    build/stage/zimbra-chat/opt/zimbra/lib/ext/openchat/zal.jar
+	install -T -D downloads/chat/zimlet/com_zextras_chat_open.zip  build/stage/zimbra-chat/opt/zimbra/zimlets/com_zextras_chat_open.zip
 
 zimbra-chat-pkg: stage-chat
 	../zm-pkg-tool/pkg-build.pl \
@@ -81,17 +81,10 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-installs='/opt/zimbra/lib/ext/openchat/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
 
-downloads/chat/openchat.jar:
+downloads/chat:
 	mkdir -p downloads/chat
-	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/openchat.jar
-
-downloads/chat/com_zextras_chat_open.zip:
-	mkdir -p downloads/chat
-	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/com_zextras_chat_open.zip
-
-downloads/chat/zal.jar:
-	mkdir -p downloads/chat
-	wget -O $@ https://files.zimbra.com/repository/zextras/chat-$(CHAT_VERSION)/zal.jar
+	wget -O $@/openchat.tgz  https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/11_Jun_2018_OP-CPB-32/openchat.tgz
+	@cd $@; tar -xvzf  openchat.tgz
 
 ########################################################################################################
 
