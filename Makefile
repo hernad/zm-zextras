@@ -58,7 +58,7 @@ downloads/drive/zal.jar:
 
 ########################################################################################################
 
-CHAT_VERSION = 1.0.18
+CHAT_VERSION = 2.0.0
 
 stage-chat: downloads/chat
 	$(MAKE) TRACK_IN="downloads/chat/extension/zal.jar downloads/chat/extension/openchat.jar downloads/chat/zimlet/com_zextras_chat_open.zip" TRACK_OUT=chat gen-hash-track
@@ -70,10 +70,10 @@ zimbra-chat-pkg: stage-chat
 	../zm-pkg-tool/pkg-build.pl \
            --out-type=binary \
 	   --pkg-version=$(CHAT_VERSION).$(shell git log --format=%at -1 hash-track/chat.hash) \
-	   --pkg-release=2 \
+	   --pkg-release=1 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends='zimbra-store (>= 8.8.8)' \
+	   --pkg-depends='zimbra-store (>= 8.8.9)' \
            --pkg-conflicts='zimbra-talk' \
            --pkg-pre-install-script='scripts/chat/preinst.sh'\
            --pkg-post-install-script='scripts/chat/postinst.sh'\
@@ -83,7 +83,7 @@ zimbra-chat-pkg: stage-chat
 
 downloads/chat:
 	mkdir -p downloads/chat
-	wget -O $@/openchat.tgz  https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/11_Jun_2018_OP-CPB-32/openchat.tgz
+	wget -O $@/openchat.tgz https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/25_Jun_2018_OP-CPB-33/openchat.tgz
 	@cd $@; tar -xvzf  openchat.tgz
 
 ########################################################################################################
