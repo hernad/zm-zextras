@@ -45,12 +45,12 @@ references:
                   --acl public-read \
                   --region us-east-1
 
-   std_filters: &std_filters
-      filters:
-         branches:
-            only:
-               - master
-               - develop
+#   std_filters: &std_filters
+#      filters:
+#         branches:
+#            only:
+#               - master
+#               - develop
 
 ############################################################################
 
@@ -135,9 +135,9 @@ workflows:
                - build_u12
                - build_c7
                - build_c6
-            <<: *std_filters
+#            <<: *std_filters
 
          - deploy_s3:
             requires:
                - deploy_s3_hold
-            <<: *std_filters
+#            <<: *std_filters
