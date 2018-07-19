@@ -21,13 +21,14 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 ########################################################################################################
 
 DRIVE_VERSION = 1.0.11
+DRIVE_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/zimbra_drive/zimbra_drive.tgz"
 
-stage-drive: downloads/drive/zimbradrive-extension.jar downloads/drive/zimbradrive-extension.conf.example downloads/drive/zal.jar downloads/drive/com_zextras_drive_open.zip 
-	$(MAKE) TRACK_IN="$^" TRACK_OUT=drive gen-hash-track
-	install -T -D downloads/drive/zimbradrive-extension.jar  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
-	install -T -D downloads/drive/zimbradrive-extension.conf.example  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.conf.example
-	install -T -D downloads/drive/zal.jar                    build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
-	install -T -D downloads/drive/com_zextras_drive_open.zip build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
+stage-drive: downloads/drive 
+	$(MAKE) TRACK_IN="downloads/drive/zimbra-extension/zimbradrive-extension.jar downloads/drive/zimbra-extension/zimbradrive-extension.conf.example downloads/drive/zimbra-extension/zal.jar downloads/drive/zimlet/com_zextras_drive_open.zip" TRACK_OUT=drive gen-hash-track
+	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.jar           build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
+	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.conf.example  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.conf.example
+	install -T -D downloads/drive/zimbra-extension/zal.jar                             build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
+	install -T -D downloads/drive/zimlet/com_zextras_drive_open.zip                    build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
 
 zimbra-drive-pkg: stage-drive
 	../zm-pkg-tool/pkg-build.pl \
@@ -40,25 +41,16 @@ zimbra-drive-pkg: stage-drive
 	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive' \
 	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
-downloads/drive/zimbradrive-extension.jar:
+downloads/drive:
 	mkdir -p downloads/drive
-	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zimbradrive-extension.jar
+	wget -O $@/zimbra_drive.tgz $(DRIVE_LINK)
+	@cd $@; tar -xvzf zimbra_drive.tgz
 
-downloads/drive/zimbradrive-extension.conf.example:
-	mkdir -p downloads/drive
-	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zimbradrive-extension.conf.example
-
-downloads/drive/com_zextras_drive_open.zip:
-	mkdir -p downloads/drive
-	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/com_zextras_drive_open.zip
-
-downloads/drive/zal.jar:
-	mkdir -p downloads/drive
-	wget -O $@ https://files.zimbra.com/repository/zextras/drive-$(DRIVE_VERSION)/zal.jar
 
 ########################################################################################################
 
 CHAT_VERSION = 2.0.0
+CHAT_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/25_Jun_2018_OP-CPB-33/openchat.tgz"
 
 stage-chat: downloads/chat
 	$(MAKE) TRACK_IN="downloads/chat/extension/zal.jar downloads/chat/extension/openchat.jar downloads/chat/zimlet/com_zextras_chat_open.zip" TRACK_OUT=chat gen-hash-track
@@ -83,7 +75,7 @@ zimbra-chat-pkg: stage-chat
 
 downloads/chat:
 	mkdir -p downloads/chat
-	wget -O $@/openchat.tgz https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/25_Jun_2018_OP-CPB-33/openchat.tgz
+	wget -O $@/openchat.tgz $(CHAT_LINK)
 	@cd $@; tar -xvzf  openchat.tgz
 
 ########################################################################################################
