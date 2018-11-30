@@ -38,6 +38,8 @@ zimbra-drive-pkg: stage-drive
 	   --pkg-name=zimbra-drive \
 	   --pkg-summary="Zimbra Drive Extensions" \
 	   --pkg-depends='zimbra-store' \
+           --pkg-pre-install-script='scripts/opendrive/preinst.sh'\
+           --pkg-post-install-script='scripts/opendrive/postinst.sh'\
 	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive' \
 	   --pkg-installs='/opt/zimbra/lib/ext/zimbradrive/*' \
 	   --pkg-installs='/opt/zimbra/zimlets/*'
