@@ -4,7 +4,7 @@ su - zimbra -c "zmmailboxdctl status"
 if [ $? -ne 0 ]; then
    echo "Mailbox is not running..."
    echo "Follow the steps below as zimbra user."
-   echo "Remove the opendrive zimlet if it isinstalled."
+   echo "Remove the opendrive zimlet if it is installed."
    echo "zmzimletctl undeploy com_zextras_drive_open"
    echo "Install the Zimbra Open Drive zimlet."
    echo "zmzimletctl deploy /opt/zimbra/zimlets/com_zextras_drive_open.zip"
