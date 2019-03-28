@@ -20,10 +20,10 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.11
-DRIVE_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/zimbra_drive/zimbra_drive.tgz"
+DRIVE_VERSION = 1.0.12
+DRIVE_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/zimbradrive/28_Mar_2019_OZD-OZD-141/zimbra_drive_extension/zimbra_drive.tgz"
 
-stage-drive: downloads/drive 
+stage-drive: downloads/drive
 	$(MAKE) TRACK_IN="downloads/drive/zimbra-extension/zimbradrive-extension.jar downloads/drive/zimbra-extension/zimbradrive-extension.conf.example downloads/drive/zimbra-extension/zal.jar downloads/drive/zimlet/com_zextras_drive_open.zip" TRACK_OUT=drive gen-hash-track
 	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.jar           build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
 	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.conf.example  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.conf.example
