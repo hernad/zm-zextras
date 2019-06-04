@@ -118,6 +118,9 @@ workflows:
    main:
       jobs:
          - checkout
+         - build_u18:
+            requires:
+               - checkout
          - build_u16:
             requires:
                - checkout
