@@ -51,8 +51,8 @@ downloads/drive:
 
 ########################################################################################################
 
-CHAT_VERSION = 2.0.1
-CHAT_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/20_Jul_2018_OP-CPB-34/openchat.tgz"
+CHAT_VERSION = 2.0.4
+CHAT_LINK = "https://zextras-artifacts.s3-eu-west-1.amazonaws.com/openchat/24_Jun_2019/openchat.tgz"
 
 stage-chat: downloads/chat
 	$(MAKE) TRACK_IN="downloads/chat/extension/zal.jar downloads/chat/extension/openchat.jar downloads/chat/zimlet/com_zextras_chat_open.zip" TRACK_OUT=chat gen-hash-track
