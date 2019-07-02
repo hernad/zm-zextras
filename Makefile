@@ -67,7 +67,7 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-release=1 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends='zimbra-store (>= 8.8.9)' \
+	   --pkg-depends='zimbra-store (>= 8.8.15)' \
            --pkg-conflicts='zimbra-talk' \
            --pkg-pre-install-script='scripts/chat/preinst.sh'\
            --pkg-post-install-script='scripts/chat/postinst.sh'\
