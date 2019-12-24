@@ -27,8 +27,10 @@ stage-drive: downloads/drive
 	$(MAKE) TRACK_IN="downloads/drive/zimbra-extension/zimbradrive-extension.jar downloads/drive/zimbra-extension/zimbradrive-extension.conf.example downloads/drive/zimbra-extension/zal.jar downloads/drive/zimlet/com_zextras_drive_open.zip" TRACK_OUT=drive gen-hash-track
 	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.jar           build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.jar
 	install -T -D downloads/drive/zimbra-extension/zimbradrive-extension.conf.example  build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zimbradrive-extension.conf.example
-	install -T -D downloads/drive/zimbra-extension/zal.jar                             build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
+	install -T -p -D downloads/drive/zimbra-extension/zal.jar                             build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/zal.jar
 	install -T -D downloads/drive/zimlet/com_zextras_drive_open.zip                    build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
+	ls -l build/stage/zimbra-drive/opt/zimbra/zimlets/com_zextras_drive_open.zip
+	ls -l build/stage/zimbra-drive/opt/zimbra/lib/ext/zimbradrive/
 
 zimbra-drive-pkg: stage-drive
 	../zm-pkg-tool/pkg-build.pl \
