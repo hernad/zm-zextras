@@ -51,7 +51,7 @@ downloads/drive:
 
 ########################################################################################################
 
-CHAT_VERSION = 2.0.2
+CHAT_VERSION = 4.0.0
 CHAT_LINK = "https://zextras-artifacts.s3-eu-west-1.amazonaws.com/openchat/08_Jan_2020_17/openchat.tgz"
 
 stage-chat: downloads/chat
@@ -67,7 +67,7 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-release=1 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends='zimbra-store (>= 8.8.9)' \
+	   --pkg-depends='zimbra-store (>= 9.0.0)' \
            --pkg-conflicts='zimbra-talk' \
            --pkg-pre-install-script='scripts/chat/preinst.sh'\
            --pkg-post-install-script='scripts/chat/postinst.sh'\
