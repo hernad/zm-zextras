@@ -20,8 +20,8 @@ all: zimbra-drive-pkg zimbra-chat-pkg
 
 ########################################################################################################
 
-DRIVE_VERSION = 1.0.12
-DRIVE_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/zimbradrive/15_Nov_2018_OZD-OZD-134/zimbra_drive_extension/zimbra_drive.tgz"
+DRIVE_VERSION = 1.0.13
+DRIVE_LINK = "https://zextras-artifacts.s3-eu-west-1.amazonaws.com/zextras_drive/12_Dec_2019_25/zimbra_drive.tgz"
 
 stage-drive: downloads/drive 
 	$(MAKE) TRACK_IN="downloads/drive/zimbra-extension/zimbradrive-extension.jar downloads/drive/zimbra-extension/zimbradrive-extension.conf.example downloads/drive/zimbra-extension/zal.jar downloads/drive/zimlet/com_zextras_drive_open.zip" TRACK_OUT=drive gen-hash-track
@@ -51,8 +51,8 @@ downloads/drive:
 
 ########################################################################################################
 
-CHAT_VERSION = 2.0.1
-CHAT_LINK = "https://s3-eu-west-1.amazonaws.com/zextras-artifacts/openchat/20_Jul_2018_OP-CPB-34/openchat.tgz"
+CHAT_VERSION = 4.0.0
+CHAT_LINK = "https://zextras-artifacts.s3-eu-west-1.amazonaws.com/openchat/08_Jan_2020_17/openchat.tgz"
 
 stage-chat: downloads/chat
 	$(MAKE) TRACK_IN="downloads/chat/extension/zal.jar downloads/chat/extension/openchat.jar downloads/chat/zimlet/com_zextras_chat_open.zip" TRACK_OUT=chat gen-hash-track
@@ -67,7 +67,7 @@ zimbra-chat-pkg: stage-chat
 	   --pkg-release=1 \
 	   --pkg-name=zimbra-chat \
 	   --pkg-summary="Zimbra Chat Extensions" \
-	   --pkg-depends='zimbra-store (>= 8.8.9)' \
+	   --pkg-depends='zimbra-store (>= 9.0.0)' \
            --pkg-conflicts='zimbra-talk' \
            --pkg-pre-install-script='scripts/chat/preinst.sh'\
            --pkg-post-install-script='scripts/chat/postinst.sh'\
